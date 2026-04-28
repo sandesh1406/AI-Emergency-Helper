@@ -1,67 +1,59 @@
-const inputField = document.getElementById('emergency-input');
-const helpBtn = document.getElementById('help-btn');
-const micBtn = document.getElementById('mic-btn');
-const loadingDiv = document.getElementById('loading');
-const responseBox = document.getElementById('response-box');
-const responseText = document.getElementById('response-text');
+async function getHelp() {
+  let input = document.getElementById("problem").value;
+  let responseBox = document.getElementById("response");
 
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-let recognition = null;
+  // ✅ Validation
+  if (!input.trim()) {
+    responseBox.innerHTML = "⚠️ Please enter your problem";
+    return;
+  }
 
-if (SpeechRecognition) {
-    recognition = new SpeechRecognition();
-    recognition.continuous = false;
-    recognition.lang = 'en-US';
-    recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        inputField.value = transcript;
-        micBtn.innerHTML = "🎤 Voice Input";
-    };
-    recognition.onerror = (event) => {
-        console.error("Speech recognition error", event.error);
-        micBtn.innerHTML = "🎤 Voice Input";
-    };
-    recognition.onend = () => {
-        micBtn.innerHTML = "🎤 Voice Input";
-    };
-} else {
-    micBtn.style.display = 'none';
-    console.warn("Speech Recognition API not supported in this browser.");
+  // ✅ LOADING UI
+  responseBox.innerHTML = `
+    <div class="loader-box">
+      <div class="spinner"></div>
+      <p>Analyzing your situation...</p>
+      <small>Please wait a moment</small>
+    </div>
+  `;
+
+  try {
+    // ✅ IMPORTANT: use relative path (works on Render)
+    let res = await fetch("/get-help", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ problem: input })
+    });
+
+    let data = await res.json();
+    console.log("API:", data);
+
+    let text =
+      data.reply ||
+      data.message ||
+      data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "";
+
+    // ❌ Handle errors properly
+    if (!text || text.toLowerCase().includes("error")) {
+      responseBox.innerHTML = "⚠️ AI error. Try again.";
+      return;
+    }
+
+    // ✅ Convert to clean bullet points
+    let points = text
+      .replace(/\*\*/g, "")
+      .split(/\d+\.|\n|-/)
+      .filter(item => item.trim() !== "")
+      .map(item => `<li>${item.trim()}</li>`)
+      .join("");
+
+    responseBox.innerHTML = `<ul>${points}</ul>`;
+
+  } catch (error) {
+    console.error("FRONTEND ERROR:", error);
+    responseBox.innerHTML = "⚠️ Server error. Check backend.";
+  }
 }
-
-micBtn.addEventListener('click', () => {
-    if (recognition) {
-        inputField.value = "";
-        micBtn.innerHTML = "🔴 Listening...";
-        recognition.start();
-    }
-});
-
-helpBtn.addEventListener('click', async () => {
-    const emergencyText = inputField.value.trim();
-    if (!emergencyText) {
-        alert("Please describe the emergency first.");
-        return;
-    }
-    loadingDiv.classList.remove('hidden');
-    responseBox.classList.add('hidden');
-    helpBtn.disabled = true;
-
-    try {
-        const response = await fetch('http://localhost:3000/get-help', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ emergency: emergencyText })
-        });
-        const data = await response.json();
-        responseText.textContent = data.advice;
-        responseBox.classList.remove('hidden');
-    } catch (error) {
-        console.error("Error:", error);
-        responseText.textContent = "Stay calm, call emergency services, move to safe place, help others, wait for help";
-        responseBox.classList.remove('hidden');
-    } finally {
-        loadingDiv.classList.add('hidden');
-        helpBtn.disabled = false;
-    }
-});
