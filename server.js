@@ -1,34 +1,72 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const express = require("express");
+const cors = require("cors");
 
 const app = express();
-const port = 3000;
 
+// ✅ Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.static("public")); // if your frontend is in /public
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// ✅ Use environment variable for API key
+const API_KEY = process.env.GEMINI_API_KEY;
 
-app.post('/get-help', async (req, res) => {
-    try {
-        const userEmergency = req.body.emergency;
-        if (!userEmergency) {
-            return res.status(400).json({ error: "Please describe the emergency." });
-        }
-        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-        const prompt = "Give short emergency safety steps for: " + userEmergency;
-        const result = await model.generateContent(prompt);
-        const responseText = result.response.text();
-        res.json({ advice: responseText });
-    } catch (error) {
-        console.error("Error fetching from Gemini API:", error);
-        const fallbackResponse = "Stay calm, call emergency services, move to safe place, help others, wait for help";
-        res.json({ advice: fallbackResponse });
+// ✅ API Route
+app.post("/get-help", async (req, res) => {
+  try {
+    const userInput = req.body.problem;
+
+    if (!userInput) {
+      return res.json({ reply: "⚠️ Please enter a problem" });
     }
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: `Give emergency steps for "${userInput}" in 5 short numbered points. No paragraph.`
+                }
+              ]
+            }
+          ]
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    console.log("API RESPONSE:", JSON.stringify(data, null, 2));
+
+    const reply =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!reply) {
+      return res.json({
+        reply: "⚠️ AI did not return proper response"
+      });
+    }
+
+    res.json({ reply });
+
+  } catch (error) {
+    console.error("SERVER ERROR:", error);
+    res.json({
+      reply: "⚠️ Server error. Check backend logs."
+    });
+  }
 });
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+// ✅ IMPORTANT: dynamic port for Render
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
