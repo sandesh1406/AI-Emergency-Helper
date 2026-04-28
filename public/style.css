@@ -6,7 +6,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
- overflow-y: auto;
+ overflow: hidden ;
 
   /* 🎯 EXACT DARK GRADIENT */
   background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
@@ -36,7 +36,8 @@ body {
 
 /* 💎 GLASS CARD */
 .container {
-  width: 480px;
+  width: 90px;
+  max-width: 420px;
   padding: 30px;
     min-height: 100vh;
   border-radius: 20px;
@@ -71,7 +72,7 @@ h1 span {
 /* INPUT */
 textarea {
   width: 100%;
-  height: 110px;
+  height: 90px;
   border-radius: 12px;
   border: none;
   padding: 12px;
