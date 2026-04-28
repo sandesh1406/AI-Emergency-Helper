@@ -1,0 +1,207 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  min-height: 100vh;
+    padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ overflow-y: auto;
+
+  /* 🎯 EXACT DARK GRADIENT */
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+}
+
+/* 🌊 WAVES */
+.wave-bg {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 0;
+}
+
+.wave-bg svg {
+  width: 200%;
+  animation: waveMove 12s linear infinite;
+}
+
+.wave-bg svg:nth-child(2) {
+  animation-duration: 20s;
+}
+
+@keyframes waveMove {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* 💎 GLASS CARD */
+.container {
+  width: 480px;
+  padding: 30px;
+    min-height: 100vh;
+  border-radius: 20px;
+  text-align: center;
+  z-index: 1;
+
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(25px);
+
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.5),
+    inset 0 0 20px rgba(255,255,255,0.05);
+}
+
+/* TITLE */
+h1 {
+  font-size: 26px;
+  margin-bottom: 5px;
+}
+
+h1 span {
+  background: linear-gradient(90deg, #ff4b5c, #6a5af9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+/* INPUT */
+textarea {
+  width: 100%;
+  height: 110px;
+  border-radius: 12px;
+  border: none;
+  padding: 12px;
+  font-size: 14px;
+  outline: none;
+}
+
+/* BUTTONS */
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+}
+
+/* 🎤 MIC */
+.mic {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  font-size: 18px;
+  color: white;
+
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  box-shadow: 0 5px 20px rgba(102,126,234,0.6);
+
+  animation: pulse 2s infinite;
+}
+
+/* ✨ GLOW BUTTON */
+.help {
+  padding: 14px 30px;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+
+  background: linear-gradient(90deg, #ff4b5c, #6a5af9);
+  box-shadow: 0 5px 25px rgba(255,75,92,0.6);
+}
+
+/* ✨ pulse animation */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+/* RESPONSE */
+.response {
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 15px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+}
+
+.step {
+  padding: 10px;
+  margin-bottom: 8px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  line-height: 1.5;
+}
+
+.loader-box {
+  text-align: center;
+  padding: 20px;
+  color: #ddd;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid rgba(255, 255, 255, 0.2);
+  border-top: 5px solid #ff4d6d;
+  border-right: 5px solid #7c3aed;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 15px auto;
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.6);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loader-box p {
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+.loader-box small {
+  opacity: 0.7;
+}
+
+/* EMERGENCY */
+.em-title {
+  margin-top: 20px;
+  color: white;
+}
+
+/* CARDS */
+.cards {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.card {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.15);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.police { color: #4facfe; }
+.ambulance { color: #00e676; }
+.fire { color: #ff3d00; }
+
+/* FOOTER */
+.footer {
+  margin-top: 15px;
+  font-size: 12px;
+  color: #ddd;
+}

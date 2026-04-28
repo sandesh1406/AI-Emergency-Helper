@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Emergency Helper</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Google Font (clean UI) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- 🌊 Background Waves -->
+<div class="wave-bg">
+  <svg viewBox="0 0 1440 320">
+    <path fill="#4facfe" fill-opacity="0.15"
+      d="M0,224L60,213.3C120,203,240,181,360,170.7C480,160,600,160,720,176C840,192,960,224,1080,224C1200,224,1320,192,1380,176L1440,160V320H0Z"></path>
+  </svg>
+
+  <svg viewBox="0 0 1440 320">
+    <path fill="#ff7e5f" fill-opacity="0.1"
+      d="M0,256L60,250C120,245,240,235,360,208C480,181,600,139,720,128C840,117,960,139,1080,149C1200,160,1320,160,1380,160L1440,160V320H0Z"></path>
+  </svg>
+</div>
+
+<!-- 🌟 Main Container -->
+<div class="container">
+
+  <h1>🚨 <span>AI Emergency Helper</span></h1>
+  <p class="subtitle">Your instant safety assistant</p>
+
+  <!-- INPUT -->
+  <textarea id="problem"
+    placeholder="Describe your emergency (fire, accident, etc)"></textarea>
+
+  <!-- BUTTONS -->
+  <div class="buttons">
+    <button class="mic" onclick="startVoice()">🎤</button>
+    <button class="help" onclick="getHelp()">✨ Get Help</button>
+  </div>
+
+  <!-- RESPONSE -->
+  <div id="response" class="response">
+    💬 AI response will appear here...
+  </div>
+
+  <!-- EMERGENCY NUMBERS -->
+  <h3 class="em-title">📞 Emergency Numbers</h3>
+
+  <div class="cards">
+    <div class="card police">🛡️ Police<br><b>100</b></div>
+    <div class="card ambulance">🚑 Ambulance<br><b>108</b></div>
+    <div class="card fire">🔥 Fire<br><b>101</b></div>
+  </div>
+
+  <!-- FOOTER -->
+  <p class="footer">🛡️ Stay safe. Stay calm. We are here to help ❤️</p>
+
+</div>
+
+<!-- SCRIPT -->
+<script src="script.js"></script>
+
+</body>
+</html>
