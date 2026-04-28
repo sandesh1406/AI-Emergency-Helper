@@ -6,7 +6,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
- overflow-y: auto;
+ overflow: auto;
 
   /* 🎯 EXACT DARK GRADIENT */
   background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
