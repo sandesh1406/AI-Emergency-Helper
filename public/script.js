@@ -1,56 +1,80 @@
-const express = require("express");
-const cors = require("cors");
+async function getHelp() {
+  let input = document.getElementById("problem").value;
+  let responseBox = document.getElementById("response");
 
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-
-// ✅ Serve frontend
-app.use(express.static("public"));
-
-const API_KEY = process.env.GEMINI_API_KEY;
-
-app.post("/get-help", async (req, res) => {
-  try {
-    const userInput = req.body.problem;
-
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: `Give emergency steps for "${userInput}" in 5 short numbered points.`
-                }
-              ]
-            }
-          ]
-        })
-      }
-    );
-
-    const data = await response.json();
-
-    const reply =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-    res.json({ reply: reply || "⚠️ No response" });
-
-  } catch (err) {
-    res.json({ reply: "⚠️ Server error" });
+  // ❌ Empty input check
+  if (!input.trim()) {
+    responseBox.innerHTML = "⚠️ Please enter your emergency situation.";
+    return;
   }
-});
 
-// ✅ Render port
-const PORT = process.env.PORT || 3000;
+  // ✅ SHOW LOADING UI
+  responseBox.innerHTML = `
+    <div class="loader-box">
+      <div class="spinner"></div>
+      <p>Analyzing your situation...</p>
+      <small>Please wait a moment</small>
+    </div>
+  `;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+  try {
+    // ✅ IMPORTANT FIX (NO localhost)
+    let res = await fetch("/get-help", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ problem: input })
+    });
+
+    let data = await res.json();
+
+    console.log("API:", data);
+
+    // ✅ Extract response safely
+    let text =
+      data.reply ||
+      data.message ||
+      data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "⚠️ No response from AI";
+
+    // ❌ Handle API error
+    if (text.toLowerCase().includes("error")) {
+      responseBox.innerHTML = "⚠️ AI error. Try again.";
+      return;
+    }
+
+    // ✅ Convert response into clean bullet points
+    let points = text
+      .replace(/\*\*/g, "")
+      .split(/\d+\.|\n|-/)
+      .filter(item => item.trim() !== "")
+      .map(item => `<li>${item.trim()}</li>`)
+      .join("");
+
+    responseBox.innerHTML = `<ul>${points}</ul>`;
+
+  } catch (error) {
+    console.log(error);
+    responseBox.innerHTML = "⚠️ Server error. Check backend.";
+  }
+}
+
+
+// 🎤 OPTIONAL: Voice input feature (basic)
+function startVoice() {
+  if (!("webkitSpeechRecognition" in window)) {
+    alert("Voice not supported in this browser");
+    return;
+  }
+
+  const recognition = new webkitSpeechRecognition();
+  recognition.lang = "en-US";
+
+  recognition.start();
+
+  recognition.onresult = function (event) {
+    const text = event.results[0][0].transcript;
+    document.getElementById("problem").value = text;
+  };
+}
