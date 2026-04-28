@@ -32,7 +32,7 @@ app.post("/get-help", async (req, res) => {
             {
               parts: [
                 {
-                  text: `Give emergency steps for "${userInput}" in 5 short numbered points. No paragraph.`
+                  text: `Give emergency steps for "${userInput}" in  numbered points. No paragraph.`
                 }
               ]
             }
