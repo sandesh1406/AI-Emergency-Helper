@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Emergency Helper</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🚨 AI Emergency Helper</h1>
+        <div class="emergency-numbers">
+            <div class="badge police">Police: 100</div>
+            <div class="badge ambulance">Ambulance: 108</div>
+            <div class="badge fire">Fire: 101</div>
+        </div>
+        <p class="subtitle">Describe your emergency for instant safety steps.</p>
+        <textarea id="emergency-input" rows="4" placeholder="Example: There is a fire in the kitchen..."></textarea>
+        <div class="button-group">
+            <button id="mic-btn" class="btn secondary-btn" title="Use Microphone">🎤 Voice Input</button>
+            <button id="help-btn" class="btn primary-btn">🚨 Get Help</button>
+        </div>
+        <div id="loading" class="hidden">
+            <p>Fetching safety steps... Please wait.</p>
+        </div>
+        <div id="response-box" class="hidden">
+            <h3>Safety Steps:</h3>
+            <p id="response-text"></p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
